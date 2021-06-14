@@ -23,8 +23,11 @@
 
         <!-- WALLET INFO -->
         <div class="row">
-            <div class="col-6">
+            <div class="col-sm-12">
                 <div id="eth-wallet-box" class="well invalid-box">
+                    <div id="eth-wallet-danger" class="alert alert-danger wallet-danger" role="alert">
+
+                    </div>
                     <h2>ETH wallet</h2>
                     <p id="prepare-message">No wallet connected. Connect wallet to show accounts and their ETH balances.</p>
 
@@ -48,28 +51,26 @@
 
                         <hr>
 
-                        <h3>All account balances</h3>
+                        <h3>Account balances</h3>
 
                         <table class="table table-listing">
                             <thead>
                                 <th>Address</th>
-                                <th>ETH balance</th>
+                                <th>Balance</th>
                             </thead>
 
                             <tbody id="accounts">
                             </tbody>
                         </table>
 
-                        <p>Please try to switch between different accounts in your wallet if your wallet supports this functonality.</p>
-
                     </div>
                 </div>
 
             </div>
 
-            <div class="col-6">
+            <div class="col-sm-12">
                 <div id="vega-wallet-box" class="well invalid-box">
-                    <div id="vega-wallet-danger" class="alert alert-danger" role="alert">
+                    <div id="vega-wallet-danger" class="alert alert-danger wallet-danger" role="alert">
 
                     </div>
                     <!-- VEGA LOGIN FORM -->
@@ -86,14 +87,23 @@
                                 <label for="input-password">Passphrase</label>
                                 <input type="password" class="form-control" id="input-password" placeholder="Passphrase" required>
                             </div>
-                            <div class="form-check">
-                                <label for="input-host">Wallet host</label>
-                                <input type="text" class="form-control" id="input-host" value="localhost" required>
+                            <div class="form-group">
+                                <input type="checkbox" class="form-check-input" id="input-selfhosted" onclick="$('#vega-form-advanced').toggle()">
+                                <label for="input-selfhosted">Selfhosted wallet</label>
                             </div>
-                            <div class="form-check">
-                                <label for="input-port">Wallet port</label>
-                                <input type="text" class="form-control" id="input-port" value="1789" required>
+
+                            <div id="vega-form-advanced">
+                                <div class="form-check">
+                                    <label for="input-host">Wallet host</label>
+                                    <input type="text" class="form-control" id="input-host" value="localhost" required>
+                                </div>
+                                <div class="form-check">
+                                    <label for="input-port">Wallet port</label>
+                                    <input type="text" class="form-control" id="input-port" value="1789" required>
+                                </div>
+
                             </div>
+
                             <button type="submit" class="btn btn-primary">Connect</button>
                         </form>
                     </div>
@@ -101,10 +111,25 @@
                     <!-- VEGA KEYS FORM -->
                     <div id="vega-keys-form" class="vega-div">
                         <h2>Select a Vega key</h2>
-                        <select id="vega-keys-select" class="form-select" aria-label="Vega key select">
+                        <select id="vega-keys-select" class="form-select" aria-label="Vega key select" onChange="getWalletCollaterals()">
                             
                         </select>
                         <button type="submit" class="btn btn-primary" onclick="updateVegaKeys()">Reload keys</button>
+
+                        <div id="vega-connected" style="display: none;">
+                            <h3>Account balances</h3>
+
+                            <table class="table table-listing">
+                                <thead>
+                                    <th>Collateral</th>
+                                    <th>Balance</th>
+                                </thead>
+
+                                <tbody id="vega-accounts">
+                                </tbody>
+                            </table>
+
+                        </div>
                     </div>
                 </div>
             </div>
@@ -113,21 +138,45 @@
 
         <!-- TRANSACTION INFO -->
         <div class="row">
-            <div class="col-12">
+            <div class="col-md-6">
                 <div id="transaction-info-box" class="well invalid-box">
-                    <h2>Transaction data</h2>
+                    <div id="vega-transaction-danger" class="alert alert-danger wallet-danger" role="alert">
+
+                    </div>
+                    <h2>Deposit</h2>
                     <form id="transaction-vega" onsubmit="submitTransaction(event)">
                         <div class="form-group">
                             <label for="input-token">Token</label>
-                            <select id="input-token" class="form-select" aria-label="Vega key select">
+                            <select id="input-token" class="form-select" aria-label="Vega key select" onChange="checkValidBalance()">
                             
                             </select>
                         </div>
                         <div class="form-group">
                             <label for="input-quantity">Quantity</label>
-                            <input type="text" class="form-control" id="input-quantity" value="0" required>
+                            <input type="text" class="form-control" id="input-quantity" value="0" required onChange="checkValidBalance()">
                         </div>
-                        <button type="submit" class="btn btn-primary">Connect</button>
+                        <button type="submit" class="btn btn-primary" id="vega-send-transaction" disabled>Send transaction</button>
+                    </form>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="withdraw-info-box" class="well invalid-box">
+                    <div id="vega-withdraw-danger" class="alert alert-danger wallet-danger" role="alert">
+
+                    </div>
+                    <h2>Withdraw</h2>
+                    <form id="withdraw-vega" onsubmit="submitWithdraw(event)">
+                        <div class="form-group">
+                            <label for="withdraw-input-token">Token</label>
+                            <select id="withdraw-input-token" class="form-select" aria-label="Vega key select" onChange="checkValidBalanceWithdraw()">
+                            
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="withdraw-input-quantity">Quantity</label>
+                            <input type="text" class="form-control" id="withdraw-input-quantity" value="0" required onChange="checkValidBalanceWithdraw()">
+                        </div>
+                        <button type="submit" class="btn btn-primary" id="vega-send-withdraw" disabled>Send transaction</button>
                     </form>
                 </div>
             </div>
@@ -164,6 +213,7 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-3.6.0.slim.min.js"></script>
 
     <!-- Import js code -->
+    <script type="text/javascript" src="./config.js"></script>
     <script type="text/javascript" src="./eth.js"></script>
     <script type="text/javascript" src="./vega.js"></script>
 </body>

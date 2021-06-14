@@ -19,10 +19,34 @@ let provider;
 // Address of the selected account
 let selectedAccount;
 
-
 let ethWallet = {
     address: "",
 }
+
+let walletBalance = {
+
+}
+
+
+// The minimum ABI to get ERC20 Token balance
+let minABI = [
+    // balanceOf
+    {
+        "constant": true,
+        "inputs": [{ "name": "_owner", "type": "address" }],
+        "name": "balanceOf",
+        "outputs": [{ "name": "balance", "type": "uint256" }],
+        "type": "function"
+    },
+    // decimals
+    {
+        "constant": true,
+        "inputs": [],
+        "name": "decimals",
+        "outputs": [{ "name": "", "type": "uint8" }],
+        "type": "function"
+    }
+];
 
 /**
  * Setup the orchestra
@@ -69,6 +93,9 @@ function init() {
  * Kick in the UI action after Web3modal dialog has chosen a provider
  */
 async function fetchAccountData() {
+    // Hide error message
+    $("#eth-wallet-danger").hide();
+    $("#eth-wallet-danger").text("");
 
     // Get a Web3 instance for the wallet
     const web3 = new Web3(provider);
@@ -97,6 +124,7 @@ async function fetchAccountData() {
     // Purge UI elements any previously loaded accounts
     accountContainer.innerHTML = '';
 
+    walletBalance = {};
     // Go through all accounts and get their ETH balance
     const rowResolvers = accounts.map(async(address) => {
         const balance = await web3.eth.getBalance(address);
@@ -107,21 +135,50 @@ async function fetchAccountData() {
         // Fill in the templated row and put in the document
         const clone = template.content.cloneNode(true);
         clone.querySelector(".address").textContent = address;
-        clone.querySelector(".balance").textContent = humanFriendlyBalance;
+        clone.querySelector(".balance").textContent = humanFriendlyBalance + " ETH";
         ethWallet.address = address;
         accountContainer.appendChild(clone);
+
+        // Add balance to balance object
+        walletBalance.eth = humanFriendlyBalance;
     });
+
+    // add token balance
+    for (const [key, value] of Object.entries(vegaTokens)) {
+        let contract = new web3.eth.Contract(minABI, value.address);
+        accounts.map(async(address) => {
+            var balance = await contract.methods.balanceOf(address).call();
+            const humanFriendlyBalance = parseFloat(balance) / 10 ** value.decimal;
+            console.log(humanFriendlyBalance);
+            const clone = template.content.cloneNode(true);
+            clone.querySelector(".address").textContent = address;
+            clone.querySelector(".balance").textContent = humanFriendlyBalance + " " + key;
+            accountContainer.appendChild(clone);
+
+            // Add balance to balance object
+            walletBalance[key] = humanFriendlyBalance;
+        });
+    }
 
     // Because rendering account does its own RPC commucation
     // with Ethereum node, we do not want to display any results
     // until data for all accounts is loaded
     await Promise.all(rowResolvers);
 
+    console.log(JSON.stringify(walletBalance));
+
     // Display fully loaded UI for wallet data
     document.querySelector("#connected").style.display = "block";
     document.querySelector("#prepare-message").style.display = "none";
     document.querySelector("#prepare").style.display = "none";
-    $("#eth-wallet-box").removeClass("invalid-box").addClass("valid-box");
+    if (validNetworks.includes(chainData.name)) {
+        $("#eth-wallet-box").removeClass("invalid-box").addClass("valid-box");
+    } else {
+        $("#eth-wallet-box").addClass("invalid-box").removeClass("valid-box");
+        $("#eth-wallet-danger").show();
+        console.log("Only the following networks are supported: " + validNetworks.join());
+        $("#eth-wallet-danger").text("Only the following networks are supported: " + validNetworks.join());
+    }
 }
 
 /**
@@ -204,6 +261,7 @@ async function onDisconnect() {
     // Set the UI back to the initial state
     document.querySelector("#prepare").style.display = "block";
     document.querySelector("#connected").style.display = "none";
+    $("#eth-wallet-box").addClass("invalid-box").removeClass("valid-box");
 }
 
 

@@ -1,17 +1,8 @@
-const vegaBridge = {
-    address: "0x47613C3F18BD1172efF3bC2AdC2210C2c2624883",
-    abiUrl: "https://api-ropsten.etherscan.io/api?module=contract&action=getabi&address=0x47613C3F18BD1172efF3bC2AdC2210C2c2624883",
-    abi: [{ "inputs": [{ "internalType": "address", "name": "erc20_asset_pool", "type": "address" }, { "internalType": "address", "name": "multisig_control", "type": "address" }], "stateMutability": "nonpayable", "type": "constructor" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "new_maximum", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }], "name": "Asset_Deposit_Maximum_Set", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "new_minimum", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }], "name": "Asset_Deposit_Minimum_Set", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user_address", "type": "address" }, { "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }, { "indexed": false, "internalType": "bytes32", "name": "vega_public_key", "type": "bytes32" }], "name": "Asset_Deposited", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": true, "internalType": "bytes32", "name": "vega_asset_id", "type": "bytes32" }, { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }], "name": "Asset_Listed", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }], "name": "Asset_Removed", "type": "event" }, { "anonymous": false, "inputs": [{ "indexed": true, "internalType": "address", "name": "user_address", "type": "address" }, { "indexed": true, "internalType": "address", "name": "asset_source", "type": "address" }, { "indexed": false, "internalType": "uint256", "name": "amount", "type": "uint256" }, { "indexed": false, "internalType": "uint256", "name": "nonce", "type": "uint256" }], "name": "Asset_Withdrawn", "type": "event" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "bytes32", "name": "vega_public_key", "type": "bytes32" }], "name": "deposit_asset", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "bytes32", "name": "vega_asset_id", "type": "bytes32" }], "name": "get_asset_source", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }], "name": "get_deposit_maximum", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }], "name": "get_deposit_minimum", "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }], "stateMutability": "view", "type": "function" }, { "inputs": [], "name": "get_multisig_control_address", "outputs": [{ "internalType": "address", "name": "", "type": "address" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }], "name": "get_vega_asset_id", "outputs": [{ "internalType": "bytes32", "name": "", "type": "bytes32" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }], "name": "is_asset_listed", "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }], "stateMutability": "view", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "bytes32", "name": "vega_asset_id", "type": "bytes32" }, { "internalType": "uint256", "name": "nonce", "type": "uint256" }, { "internalType": "bytes", "name": "signatures", "type": "bytes" }], "name": "list_asset", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "uint256", "name": "nonce", "type": "uint256" }, { "internalType": "bytes", "name": "signatures", "type": "bytes" }], "name": "remove_asset", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "uint256", "name": "maximum_amount", "type": "uint256" }, { "internalType": "uint256", "name": "nonce", "type": "uint256" }, { "internalType": "bytes", "name": "signatures", "type": "bytes" }], "name": "set_deposit_maximum", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "uint256", "name": "minimum_amount", "type": "uint256" }, { "internalType": "uint256", "name": "nonce", "type": "uint256" }, { "internalType": "bytes", "name": "signatures", "type": "bytes" }], "name": "set_deposit_minimum", "outputs": [], "stateMutability": "nonpayable", "type": "function" }, { "inputs": [{ "internalType": "address", "name": "asset_source", "type": "address" }, { "internalType": "uint256", "name": "amount", "type": "uint256" }, { "internalType": "uint256", "name": "expiry", "type": "uint256" }, { "internalType": "address", "name": "target", "type": "address" }, { "internalType": "uint256", "name": "nonce", "type": "uint256" }, { "internalType": "bytes", "name": "signatures", "type": "bytes" }], "name": "withdraw_asset", "outputs": [], "stateMutability": "nonpayable", "type": "function" }],
-}
+const web3 = new Web3(window.ethereum);
+const vegaBridgeContract = new web3.eth.Contract(vegaBridge.abi, vegaBridge.address);
 
-const vegaTokensAddress = {
-    tDAI: "0x65e92e892Fbb489ea263c8E52bb11D1c9b67C54d",
-    tBTC: "0xc6A622C2bbCA2645f941eDEEE6f2611971b6870c",
-    tUSDC: "0xbc2ab6Cdeeff966F8E8fE136460A49e46a72D4b9",
-    tEURO: "0x8218996E51a807Caa94B815a8e144fd5229f07A8",
-    tVOTE: "0x7e503d51E18bF3d5825682A54B363799D4a8e344",
-}
-
+var vegaTokens = {}
+var vegaCollaterals = {}
 
 var wallet = {
     url: "",
@@ -45,7 +36,8 @@ async function connectWallet(e) {
     } catch (error) {
         showVegaError(error);
     }
-    await updateVegaKeys()
+    await updateVegaKeys();
+    getWalletCollaterals();
 }
 
 async function updateVegaKeys() {
@@ -111,24 +103,259 @@ function showVegaError(error) {
     $("#vega-wallet-danger").show();
 }
 
+function showWithdrawError(error) {
+    var message = ""
+    if (error.response) {
+        // Request made and server responded
+        console.log(error.response.data);
+        console.log(error.response.status);
+        console.log(error.response.headers);
+        message = error.response.data.error + ". Response status: " + error.response.status.toString();
+    } else if (error.request) {
+        // The request was made but no response was received
+        console.log(error.request);
+        message = "The request was made but no response was received."
+    } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+        message = "Invalid request. " + error.message;
+    }
+
+    $("#vega-withdraw-danger").text(message);
+    $("#vega-withdraw-danger").show();
+}
+
 function loadTokens() {
     $('#input-token').find('option').remove();
-    for (const [key, value] of Object.entries(vegaTokensAddress)) {
-        console.log(`${key}: ${value}`);
-        $("#input-token").append(new Option(key, value));
+    $('#withdraw-input-token').find('option').remove();
+    for (const [key, value] of Object.entries(vegaTokens)) {
+        console.log(`${key}: ${value.address}`);
+        var option = new Option(key, value.address);
+        option.setAttribute('decimal', value.decimal);
+        var withdrawOption = new Option(key, value.address);
+        withdrawOption.setAttribute('decimal', value.decimal);
+        $("#input-token").append(option);
+        $("#withdraw-input-token").append(withdrawOption);
     }
 }
 
 async function submitTransaction(e) {
     e.preventDefault();
-    const web3 = new Web3(window.ethereum);
     await window.ethereum.enable();
 
-    const vegaBridgeContract = new web3.eth.Contract(vegaBridge.abi, vegaBridge.address);
-
-    console.log(vegaBridgeContract);
-
-    vegaBridgeContract.methods.deposit_asset($("#input-token").val(), $("#input-quantity").val(), $("#vega-keys-select").val()).send({ from: ethWallet.address });
+    var decimal = $("#input-token").find(':selected').attr('decimal');
+    var quantity = parseFloat($("#input-quantity").val()) * 10 ** parseFloat(decimal);
+    vegaBridgeContract.methods.deposit_asset($("#input-token").val(), quantity, $("#vega-keys-select").val()).send({ from: ethWallet.address });
 }
 
-loadTokens();
+async function submitWithdraw(e) {
+    e.preventDefault();
+    await window.ethereum.enable();
+
+    var decimal = $("#withdraw-input-token").find(':selected').attr('decimal');
+    var quantity = parseFloat($("#withdraw-input-quantity").val()) * 10 ** parseFloat(decimal);
+    vegaBridgeContract.methods.withdraw_asset($("withdraw-#input-token").val(), quantity, $("#vega-keys-select").val()).send({ from: ethWallet.address });
+}
+
+
+// Get balance for a given public key
+async function getWalletCollaterals() {
+    $("#vega-accounts").html("");
+    $("#vega-wallet-danger").hide();
+    try {
+        var httpConfig = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        const walletResp = await axios.post(vegaGraphUrl, {
+            query: getCollateralQuery($("#vega-keys-select option:selected").text())
+        }, httpConfig);
+        console.log(walletResp);
+        console.log(walletResp.data.data.party.accounts);
+        showVegaCollateral(walletResp.data.data.party.accounts);
+    } catch (error) {
+        showVegaError(error);
+    }
+    $("#vega-connected").show();
+}
+
+function showVegaCollateral(collaterals) {
+    // Purge UI elements any previously loaded accounts
+    const template = document.querySelector("#template-balance");
+
+    for (var i = 0; i < collaterals.length; i++) {
+        const clone = template.content.cloneNode(true);
+        vegaCollaterals[collaterals[i].asset.symbol] = collaterals[i].balance / (10 ** vegaTokens[collaterals[i].asset.symbol].decimal);
+        clone.querySelector(".address").textContent = collaterals[i].asset.symbol;
+        clone.querySelector(".balance").textContent = collaterals[i].balance / (10 ** vegaTokens[collaterals[i].asset.symbol].decimal);
+        $("#vega-accounts").append(clone);
+    }
+}
+
+async function getVegaAssets() {
+    //assets = await vegaBridgeContract.getPastEvents("Asset_Listed", { fromBlock: 1 }).then(console.log);
+    // console.log(JSON.stringify(assets));
+
+    try {
+        assets = await axios.get(vegaRestUrl + "/assets");
+
+    } catch (error) {
+        throw error;
+    }
+
+    for (var i = 0; i < assets.data.assets.length; i++) {
+        var asset = assets.data.assets[i];
+        if (asset.details.erc20 != null) {
+            vegaTokens[asset.details.symbol] = {};
+            vegaTokens[asset.details.symbol]["address"] = asset.details.erc20.contractAddress;
+            vegaTokens[asset.details.symbol]["id"] = asset.id;
+            vegaTokens[asset.details.symbol]["decimal"] = asset.details.decimals;
+        }
+    };
+
+    loadTokens();
+}
+
+function checkValidBalance() {
+    let token = $("#input-token option:selected").text();
+    let value = $('#input-quantity').val();
+
+    if (value > 0 && walletBalance[token] && walletBalance[token] > value) {
+        console.log("Valid transaction. Quantity: " + value + ". Available: " + walletBalance[token]);
+
+        // check if vega wallet is set
+        if ($("#vega-keys-select").val()) {
+            $("#vega-send-transaction").prop('disabled', false);
+            $("#vega-transaction-danger").hide();
+            $("#vega-transaction-danger").text();
+            $("#transaction-info-box").removeClass("invalid-box").addClass("valid-box");
+        } else {
+            $("#vega-transaction-danger").show();
+            $("#vega-transaction-danger").text("Please connect a vega wallet");
+            $("#transaction-info-box").removeClass("valid-box").addClass("invalid-box");
+        }
+    } else {
+        let message = "Invalid transaction. Quantity: " + value + ". Available: " + walletBalance[token]
+        console.log(message);
+        $("#vega-send-transaction").prop('disabled', true);
+        $("#transaction-info-box").removeClass("valid-box").addClass("invalid-box");
+        $("#vega-transaction-danger").show();
+        $("#vega-transaction-danger").text(message);
+    }
+}
+
+function checkValidBalanceWithdraw() {
+    let token = $("#withdraw-input-token option:selected").text();
+    let value = $('#withdraw-input-quantity').val();
+    if (ethWallet.address != "" && value > 0 && vegaCollaterals[token] && vegaCollaterals[token] > value) {
+        console.log("Valid transaction. Quantity: " + value + ". Available: " + vegaCollaterals[token]);
+        // check if vega wallet is set
+        if ($("#vega-keys-select").val()) {
+            $("#vega-send-withdraw").prop('disabled', false);
+            $("#vega-withdraw-danger").hide();
+            $("#vega-withdraw-danger").text();
+            $("#withdraw-info-box").removeClass("invalid-box").addClass("valid-box");
+        } else {
+            $("#vega-withdraw-danger").show();
+            $("#vega-withdraw-danger").text("Please connect a vega wallet");
+            $("#withdraw-info-box").removeClass("valid-box").addClass("invalid-box");
+
+        }
+    } else {
+        let message = "Invalid transaction. Quantity: " + value + ". Available: " + vegaCollaterals[token]
+        if (ethWallet.address == "") {
+            message = "Please connect your ETH wallet"
+        }
+        if (value == 0) {
+            message = "Value has to be greater than 0"
+        }
+
+        console.log(message);
+        $("#vega-send-withdraw").prop('disabled', true);
+        $("#withdraw-info-box").removeClass("valid-box").addClass("invalid-box");
+        $("#vega-withdraw-danger").show();
+        $("#vega-withdraw-danger").text(message);
+    }
+}
+
+async function submitWithdraw() {
+    //e.preventDefault();
+    var asset = $("#withdraw-input-token option:selected").text();
+    var assetName = $("#withdraw-input-token option:selected").text();
+    var assetId = vegaTokens[assetName]["id"];
+    var amount = $("#withdraw-input-quantity").val();
+    try {
+        var httpConfig = {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        }
+        const withdrawResp = await axios.post(vegaGraphUrl, {
+            operationName: "prepareWithdrawal",
+            query: prepareWithdrawal(),
+            variables: {
+                amount: (amount * (10 ** vegaTokens[asset].decimal)).toString(),
+                assetId: assetId,
+                erc20Details: { receiverAddress: vegaBridge.address },
+            }
+        }, httpConfig);
+
+        console.log("withdrawal: " + withdrawResp.data.data.prepareWithdrawal.blob + " " + ethWallet.address);
+        var transaction = withdrawResp.data.data.prepareWithdrawal.blob;
+        await signTransaction(transaction);
+    } catch (error) {
+        showWithdrawError(error);
+    }
+}
+
+async function sendMessage(m) {
+    try {
+        var tx = m.signedTx;
+        console.log(JSON.stringify(tx));
+        const sendResp = await axios.post(vegaRestUrl + "/transaction", { tx: tx });
+        console.log(sendResp.data);
+
+    } catch (error) {
+        showWithdrawError(error);
+    }
+}
+
+async function signTransaction(transaction) {
+    try {
+
+        var httpConfig = {
+            headers: {
+                Authorization: "Bearer " + wallet.jwt
+            }
+        }
+
+        console.log($("#vega-keys-select option:selected").text());
+        const pubkey = $("#vega-keys-select option:selected").text();
+
+        const signResp = await axios.post(wallet.url + "/api/v1/messages", {
+            tx: transaction,
+            pubKey: pubkey,
+            propagate: true,
+        }, httpConfig);
+        console.log(signResp.data);
+        return signResp.data;
+
+    } catch (error) {
+        showWithdrawError(error);
+    }
+}
+
+async function sendMessage(m) {
+    try {
+        var tx = m.signedTx;
+        console.log(JSON.stringify(tx));
+        const sendResp = await axios.post(vegaRestUrl + "/transaction", { tx: tx, type: "TYPE_COMMIT" });
+        console.log(sendResp.data);
+
+    } catch (error) {
+        showWithdrawError(error);
+    }
+}
+
+getVegaAssets();
