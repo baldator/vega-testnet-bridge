@@ -36,3 +36,17 @@ mutation prepareWithdrawal($amount: String!, $assetId: String!, $erc20Details: E
     }
 }
 `;
+
+const getWithdrawal = () => `
+query erc20WithdrawalApproval($withdrawalId: ID!) {
+    erc20WithdrawalApproval(withdrawalId: $withdrawalId) {
+      assetSource
+      amount
+      expiry
+      nonce
+      signatures
+      __typename
+    }
+  }
+  
+`;

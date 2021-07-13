@@ -12,15 +12,21 @@ var wallet = {
     pwd: "",
     jwt: "",
     keys: null,
+    https: false,
 }
 
 async function connectWallet(e) {
     e.preventDefault();
     $("#vega-wallet-danger").hide();
 
+    wallet.https = document.getElementById("input-wallet-https").checked;
     wallet.port = document.getElementById("input-port").value;
     wallet.host = document.getElementById("input-host").value;
-    wallet.url = "http://" + wallet.host + ":" + wallet.port
+    var schema = "http://"
+    if (wallet.https) {
+        schema = "https://"
+    }
+    wallet.url = schema + wallet.host + ":" + wallet.port
     wallet.name = document.getElementById("input-wallet").value;
     wallet.pwd = document.getElementById("input-password").value;
 
@@ -173,7 +179,9 @@ async function getWalletCollaterals() {
         }, httpConfig);
         console.log(walletResp);
         console.log(walletResp.data.data.party.accounts);
-        showVegaCollateral(walletResp.data.data.party.accounts);
+        if (walletResp.data.data.party != null) {
+            showVegaCollateral(walletResp.data.data.party.accounts);
+        }
     } catch (error) {
         showVegaError(error);
     }
@@ -248,7 +256,7 @@ function checkValidBalance() {
 function checkValidBalanceWithdraw() {
     let token = $("#withdraw-input-token option:selected").text();
     let value = $('#withdraw-input-quantity').val();
-    if (ethWallet.address != "" && value > 0 && vegaCollaterals[token] && vegaCollaterals[token] > value) {
+    if (ethWallet.address != "" && value > 0 && vegaCollaterals[token] && vegaCollaterals[token] >= value) {
         console.log("Valid transaction. Quantity: " + value + ". Available: " + vegaCollaterals[token]);
         // check if vega wallet is set
         if ($("#vega-keys-select").val()) {
@@ -279,8 +287,10 @@ function checkValidBalanceWithdraw() {
     }
 }
 
-async function submitWithdraw() {
-    //e.preventDefault();
+async function submitWithdraw(e) {
+    // todo add loader
+    e.preventDefault();
+    var now = Date.now();
     var asset = $("#withdraw-input-token option:selected").text();
     var assetName = $("#withdraw-input-token option:selected").text();
     var assetId = vegaTokens[assetName]["id"];
@@ -301,12 +311,73 @@ async function submitWithdraw() {
             }
         }, httpConfig);
 
-        console.log("withdrawal: " + withdrawResp.data.data.prepareWithdrawal.blob + " " + ethWallet.address);
+        console.log(JSON.stringify(withdrawResp))
+        console.log("withdrawal: " + withdrawResp + " " + ethWallet.address);
         var transaction = withdrawResp.data.data.prepareWithdrawal.blob;
-        await signTransaction(transaction);
+        var signature = await signTransaction(transaction);
+
+        console.log(signature);
+
+        // wait for transaction to be ready
+        var withdrawal = null;
+        while (withdrawal == null) {
+            await new Promise(r => setTimeout(r, 2000));
+            withdrawal = await getWithdrawTransaction($("#vega-keys-select option:selected").text(), now);
+        }
+
+        var id = "";
+        if (Array.isArray(withdrawal)) {
+            id = withdrawal[0].id;
+        } else {
+            id = withdrawal.id
+        }
+
+        var withdrawObj = null
+        while (withdrawObj == null) {
+            console.log("Transaction id: " + id)
+            withdrawObj = await axios.post(vegaGraphUrl, {
+                operationName: "erc20WithdrawalApproval",
+                query: getWithdrawal(),
+                variables: {
+                    withdrawalId: id,
+                }
+            }, httpConfig);
+
+            if (withdrawObj.data.errors != null) {
+                console.log(JSON.stringify(withdrawObj.data.errors));
+                withdrawObj = null
+                await new Promise(r => setTimeout(r, 2000));
+            }
+        }
+
+        console.log(JSON.stringify(withdrawObj))
+        console.log(withdrawObj.data.data.erc20WithdrawalApproval.signatures);
+
+        vegaBridgeContract.methods.withdraw_asset(withdrawObj.data.data.erc20WithdrawalApproval.assetSource, withdrawObj.data.data.erc20WithdrawalApproval.amount, withdrawObj.data.data.erc20WithdrawalApproval.expiry, vegaBridge.address, withdrawObj.data.data.erc20WithdrawalApproval.nonce, withdrawObj.data.data.erc20WithdrawalApproval.signatures).send({ from: ethWallet.address });
+
     } catch (error) {
         showWithdrawError(error);
     }
+}
+
+async function getWithdrawTransaction(pubkey, createdTimestamp) {
+    try {
+        withdrawResp = await axios.get(vegaRestUrl + "/withdrawals/party/" + pubkey);
+
+    } catch (error) {
+        throw error;
+    }
+
+    console.log(vegaRestUrl + "/withdrawals/party/" + pubkey);
+    console.log(withdrawResp.data.withdrawals)
+    for (var i = 0; i < withdrawResp.data.withdrawals.length; i++) {
+        console.log("bc_time: " + Math.floor(withdrawResp.data.withdrawals[i].createdTimestamp / (10 ** 6)) + ", tx_time: " + createdTimestamp);
+        if (Math.floor(withdrawResp.data.withdrawals[i].createdTimestamp / (10 ** 6)) > createdTimestamp) {
+            return withdrawResp.data.withdrawals[i];
+        }
+    }
+
+    return null;
 }
 
 async function sendMessage(m) {
@@ -356,6 +427,12 @@ async function sendMessage(m) {
     } catch (error) {
         showWithdrawError(error);
     }
+}
+
+function hexToBytes(hex) {
+    for (var bytes = [], c = 0; c < hex.length; c += 2)
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+    return bytes;
 }
 
 getVegaAssets();

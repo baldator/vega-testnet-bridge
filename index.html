@@ -93,13 +93,19 @@
                             </div>
 
                             <div id="vega-form-advanced">
+                                <div class="form-group">
+                                    <input type="checkbox" class="form-check-input" id="input-wallet-https">
+                                    <label for="input-wallet-httpst">https enabled</label>
+                                </div>
                                 <div class="form-check">
-                                    <label for="input-host">Wallet host</label>
-                                    <input type="text" class="form-control" id="input-host" value="localhost" required>
+                                    <label for="input-host">Wallet url</label>
+                                    <!-- <input type="text" class="form-control" id="input-host" value="localhost" required> -->
+                                    <input type="text" class="form-control" id="input-host" value="wallet.testnet.vega.xyz/api/v1" required>
                                 </div>
                                 <div class="form-check">
                                     <label for="input-port">Wallet port</label>
-                                    <input type="text" class="form-control" id="input-port" value="1789" required>
+                                    <!-- <input type="text" class="form-control" id="input-port" value="1789" required> -->
+                                    <input type="text" class="form-control" id="input-port" value="443" required>
                                 </div>
 
                             </div>
